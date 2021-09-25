@@ -3,31 +3,38 @@ import { useEffect, useState } from 'react'
 
 const Table = (props) => {
 
+    //สร้างรูปแบบ state ของ player
     const player = Object.freeze({
         name: props.player,
         ship: Array.from([]),
         position: Array.from([]),
         founded: 0,
     })
+
+    //สร้าง plyer state โดยใช้รูปแบบ player
     const [playerState, setPlayerState] = useState(player)
 
     var gameover = false
 
+    // ฟังก์ชั่นสุ่มเลขโดยรับค่า min max
     function getRandomInt(min, max) {
         const minimum = Math.ceil(min);
         const maximum = Math.floor(max);
      
         return Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
      }
-    
+
+    // ฟังก์ชั่นสุ่มตำแหน่งหัวเรือโดยรับ min max และ arrayไว้เก็บตำแหน่งเรือ
     function randomShip(min, max, excludeArrayNumbers) {
         let randomNumber;
       
+        // เช็คว่า excludeArrayNumbers เป็น array หรือไม่???
         if(!Array.isArray(excludeArrayNumbers)) {
           randomNumber = getRandomInt(min, max);
           return randomNumber;
         }
-      
+        
+        // ให้สุ่มตำแหน่งหัวเรือเรื่อยๆ จนกว่าตำแหน่งที่ได้ไม่ซ้ำกับตำแหน่งที่มี หรือเมื่อเป็น array ว่าง
         do {
           randomNumber = getRandomInt(min, max);
         } while ((excludeArrayNumbers || []).includes(randomNumber));
@@ -35,28 +42,37 @@ const Table = (props) => {
         return randomNumber;
     }
 
+    // ฟั่งชั่นที่ทำงานเมื่อผู้เล่นกดช่องตาราง 
     function play(e) {
+        //เช็คว่ามีเรือรึเปล่า
         checkShip(e)
+        //เช็คว่าเกมจบรึยัง
         if(gameover){
+            //เมื่อจบแล้วไปแสดงหน้าจบเกม
             end()
         }
     }
 
+    // ฟังก์ชั่นสุ่มสำหรับเซ็กว่าผู้เล่นยิงโดนเรือตรงข้ามหรือไม่
     function checkShip(e) {
+         // ให้ตัวแปล clicked เก็บตำแหน่งที่ผู้เล่นกด
         var clicked = [parseInt(e.target.id[0]), parseInt(e.target.id[2])]
         console.log(clicked)
         console.log(playerState.ship[0])
+         // ให้ตัวแปล found เก็บค่า boolean ว่าเจอเรือหรือไม่
         var found = playerState.ship.find(ship => {
             if((ship[0] === clicked[0]) && (ship[1] === clicked[1])){
                 return true
             }
             else return false
         })
+        // เมื่อเจอเรือให้บวกแต้มฝั่งผู้เล่นที่เจอ
         if(found){
             setPlayerState({
                 ...playerState,
                 founded: playerState.founded + 1
             })
+            // เมื่อแต้มครบ จบเกม
             if(playerState.founded === 10) {
                 gameover = true
             }
@@ -81,6 +97,7 @@ const Table = (props) => {
         console.log(playerState.name + 'WIN!!!')
     }
 
+    // ฟังก์ชั่นสุ่มสำหรับสร้างเรือ
     function generateShip(size) {
         // Random => Check available => random available
         // If not available => Random again
@@ -136,8 +153,10 @@ const Table = (props) => {
         generateShip(2)
     }, [setPlayerState])
 
+    // สร้างตารางโดยรับค่า id และ src
     const createCell = (id, src) => {
 
+        // ถ้าเป็นแถวแรกให้สร้าง header ระบุเลขช่องด้วยนอกจากนั้นก็สร้างแค่ช่องปกติ
         if (id[0] === 0){
             return( 
                     <th>
