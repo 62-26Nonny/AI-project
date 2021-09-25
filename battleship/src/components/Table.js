@@ -91,7 +91,19 @@ const Table = (props) => {
     }, [setPlayerState])
 
     const createCell = (id, src) => {
-        return(
+
+
+        if (id < 10){
+            return( 
+                    <th>
+                        {id + 1} 
+                        <td className='cell'>
+                            <img id={id} src={src} onClick={play} />
+                        </td>
+                    </th>
+            )
+        }
+        return( 
             <td className='cell'>
                 <img id={id} src={src} onClick={play} />
             </td>
@@ -102,9 +114,15 @@ const Table = (props) => {
         <Container>
             <h2>{props.player}</h2>
             <table>
+                
                 {Array.from({ length: 10 }).map((_, row) => {
+
+                    var ascii = 65
                     return (
                         <tr>
+                            <th>
+                                 {String.fromCharCode(ascii + row)} 
+                            </th>
                             {Array.from({ length: 10 }).map((_, col) => {
                                 var index = ((10 - row - 1) * 10) + (10 - col)
                                 var id = (row * 10) + col
