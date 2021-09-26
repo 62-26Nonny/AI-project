@@ -89,7 +89,7 @@ const Table = (props) => {
         var clicked = [parseInt(e.target.id[0]), parseInt(e.target.id[2])]
 
         // เช็คว่าเจอเรือไหม (เรือ: "O")
-        if(playerState.board[clicked[0] + 1][clicked[1] + 1] === "O"){
+        if (playerState.board[clicked[0] + 1][clicked[1] + 1] === "O") {
             return true
         } else {
             return false
@@ -112,34 +112,28 @@ const Table = (props) => {
 
     /* ต้องลงได้ทั้ง 4 ทิศ ถึงจะผ่าน */
     function placeable(head, length) {
-        let xPlaceable
-        let yPlaceable
-
+        
         try {
             for (let axis = 0; axis < 2; axis++) {
-                for (let i = head[axis]; i < head[axis] + (length - 1); i++) {
+                for (let i = head[axis] - (length - 1); i < head[axis] + (length - 1); i++) {
                     let temp
-             
-                    if(axis === 0)
+
+                    if (axis === 0)
                         temp = playerState.board[i][head[1]]
-                    else 
+                    else
                         temp = playerState.board[head[0]][i]
-                        
+
                     if (temp === '-') {
                         continue
                     }
                     else {
                         /* ถ้าวางไม่ได้ ยกเลิกทันที */
-                        if(axis === 0) xPlaceable = false
-                        else yPlaceable = false
+                        return false
                     }
                 }
             }
 
-            if(xPlaceable && yPlaceable) return 'both'
-            else if(xPlaceable) return 'x'
-            else if(yPlaceable) return 'y'
-            else return 'false'
+            return true
 
         } catch (TypeError) {
             /* โค้ดไม่ได้แยกแยะเรื่องหลุดแมพ ทำให้ TypeError ถ้าเลือกขอบแมพแล้วขนาดยาวจนเกิน Board (เกิน Length array ของ board) ซึ่งถ้าเป็นแบบนี้มันลงไม่ได้อยู่แล้ว return false ไปเลย*/
@@ -171,29 +165,28 @@ const Table = (props) => {
                 prow[axis] = getRandomInt(0, 10)
             }
             isPlaceable = placeable(prow, shipLength)
-        } while (isPlaceable === 'false')
+        } while (!isPlaceable)
 
         playerState.board[prow[0]][prow[1]] = 'O'
         /* วางเรือ แบบสุ่มทิศ */
-        switch (isPlaceable) {
-            case 'both':
-                let temp = getRandomInt(0, 2)
-                if(temp === 0)
-                    for (let i = prow[0]; i < prow[0] + (shipLength - 1); i++) {
-                        playerState.board[i][prow[1]] = 'O';
-                    }
-                else
-                    for (let i = prow[1]; i < prow[1] + (shipLength - 1); i++) {
-                        playerState.board[prow[0]][i] = 'O';
-                    }
-                break;
-            case 'x':
-                for (let i = prow[0]; i < prow[0] + (shipLength - 1); i++) {
+        switch (getRandomInt(1, 4)) {
+            case 1:
+                for (let i = prow[0]; i < prow[0] + shipLength; i++) {
                     playerState.board[i][prow[1]] = 'O';
                 }
                 break;
-            case 'y':
-                for (let i = prow[1]; i < prow[1] + (shipLength - 1); i++) {
+            case 2:
+                for (let i = prow[1]; i < prow[1] + shipLength; i++) {
+                    playerState.board[prow[0]][i] = 'O';
+                }
+                break;
+            case 3:
+                for (let i = prow[0] - (shipLength - 1); i < prow[0]; i++) {
+                    playerState.board[i][prow[1]] = 'O';
+                }
+                break;
+            case 4:
+                for (let i = prow[1] - (shipLength - 1); i < prow[1]; i++) {
                     playerState.board[prow[0]][i] = 'O';
                 }
                 break;
