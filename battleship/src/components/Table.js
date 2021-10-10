@@ -1,5 +1,8 @@
-import Container from 'react-bootstrap/Container'
+
+import { Container, Button } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
+
+
 
 const Table = (props) => {
 
@@ -24,10 +27,103 @@ const Table = (props) => {
         founded: 0,
     })
 
+
+
+
     //สร้าง plyer state โดยใช้รูปแบบ player
     const [playerState, setPlayerState] = useState(player)
 
     var gameover = false
+
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+    
+    async function drop(ev) {
+        var cell_id = ev.target.id
+        var row = parseInt(cell_id.slice(0, 1))
+        var col = parseInt(cell_id.slice(2))
+    
+        let prow = []
+        prow[0] = row;
+        prow[1] = col; 
+
+        let isPlaceable
+        // console.log(row + ' ' + col)
+        // console.log(cell_id)
+        ev.preventDefault();
+    
+        var data = ev.dataTransfer.getData("text");
+        var ship = document.getElementById(data)
+    
+        console.log(ship.id)
+        // console.log(ship.childNodes)
+        var ship_size = ship.childElementCount
+    
+        isPlaceable = placeable(prow, ship_size)
+        if(isPlaceable){
+            for (var i = 0; i < ship_size; i++) {
+                // console.log(i)
+                cell_id = (document.getElementById(row + ',' + (col + i)));
+                cell_id.parentElement.classList.add('parent')
+                
+                if(ship.id === 'DD'){
+                    playerState.board[row + 1][col + i + 1] = 'DD'
+                } else if(ship.id === 'CU') {
+                    playerState.board[row + 1][col + i + 1] = 'CU'
+                } else if(ship.id === 'BS') {
+                    playerState.board[row + 1][col + i + 1] = 'BS'
+                } else {
+                    playerState.board[row + 1][col + i + 1] = 'AC'
+                } 
+               
+        
+                // console.log('Target cell '+ i + ':' + cell_id.id)
+                // console.log('ship part '+ i + ':' + ship.childNodes[i].id)
+                var ship_part = ship.childNodes[0]
+                ship_part.classList.add("image2");
+                // ship_part.classList.add('hidden');
+                ship_part.classList.remove("part");
+                // cell_id.appendChild(ship.childNodes[i])
+                cell_id.insertAdjacentElement('afterend', (ship_part))
+                    
+                // console.log('Target cell after insert '+ i + ':' + cell_id)
+        
+            }
+            console.log(playerState.board)
+        } else
+        console.log("not placeable")
+       
+    }
+    
+    function set() {
+        var ships = document.getElementsByClassName('parent')
+        var part_id = [];
+
+        for (let index = 0; index < ships.length; index++) {
+            console.log(ships[index].childNodes[1].id)
+            ships[index].childNodes[1].classList.add('hidden')
+            part_id.push(ships[index].childNodes[1].id.slice(0,2));
+           
+        }
+        console.log(playerState.board)
+        console.log (part_id)
+
+    }
+
+    // function check_boom() {
+    //     var ships = document.getElementsByClassName('parent')
+    //     var part_id = [];
+
+    //     for (let index = 0; index < ships.length; index++) {
+    //         part_id.push(ships[index].childNodes[1].id.slice(0,2));
+            
+    //     }
+    //     console.log (part_id)
+
+    // }
+
+
 
     // ฟังก์ชั่นสุ่มเลขโดยรับค่า min max
     function getRandomInt(min, max) {
@@ -63,6 +159,7 @@ const Table = (props) => {
         // เมื่อเจอเรือให้บวกแต้มฝั่งผู้เล่นที่เจอ
         if (found) {
             foundShip(e)
+
             setPlayerState({
                 ...playerState,
                 founded: playerState.founded + 1
@@ -89,7 +186,8 @@ const Table = (props) => {
         var clicked = [parseInt(e.target.id[0]), parseInt(e.target.id[2])]
 
         // เช็คว่าเจอเรือไหม (เรือ: "O")
-        if (playerState.board[clicked[0] + 1][clicked[1] + 1] === "O") {
+        if (!(playerState.board[clicked[0] + 1][clicked[1] + 1] === "-")) {
+            playerState.board[clicked[0] + 1][clicked[1] + 1] = "x"
             return true
         } else {
             return false
@@ -102,8 +200,35 @@ const Table = (props) => {
     }
 
     function foundShip(e) {
+        
+
+        // var ships = document.getElementsByClassName('parent')
+        // var part_id = [];
+
+        // for (let index = 0; index < ships.length; index++) {
+        //     part_id.push(ships[index].childNodes[1].id.slice(0,2)); 
+        // }
+        var is_DD_Alive = true
+        for(var i=0; i<12; i++){
+            console.log(playerState.board[i])
+            if((playerState.board[i].includes("DD"))){
+                is_DD_Alive = true
+                break;
+            } else is_DD_Alive = false
+
+            
+        }
+
         console.log(playerState.name + ': FOUND SHIP!!!')
+        if( !is_DD_Alive ){
+            console.log('Destroyer Ship Sunk!')
+        }
+        // if(!(part_id.includes("DD"))){
+        //     console.log('Destroyer Ship Sunk!')
+        // }
+
         e.target.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9qcrQeLufxv61jZ194tG5CJvux0p4U4-r2g&usqp=CAU'
+        console.log(playerState.board)
     }
 
     function end() {
@@ -112,7 +237,7 @@ const Table = (props) => {
 
     /* ต้องลงได้ทั้ง 4 ทิศ ถึงจะผ่าน */
     function placeable(head, length) {
-        
+
         try {
             for (let axis = 0; axis < 2; axis++) {
                 for (let i = head[axis] - (length - 1); i < head[axis] + (length - 1); i++) {
@@ -194,9 +319,11 @@ const Table = (props) => {
     }
 
     useEffect(() => {
-        generateShip(2)
-        generateShip(3)
-        generateShip(5)
+        // generateShip(2)
+        // generateShip(3)
+        // generateShip(2)
+        // generateShip(3)
+        // generateShip(4)
         console.log(playerState.name + " board: ")
         console.log(playerState.board)
     }, [setPlayerState])
@@ -204,20 +331,21 @@ const Table = (props) => {
     // สร้างตารางโดยรับค่า id และ src
     const createCell = (id, src) => {
 
+
         // ถ้าเป็นแถวแรกให้สร้าง header ระบุเลขช่องด้วยนอกจากนั้นก็สร้างแค่ช่องปกติ
         if (id[0] === 0) {
             return (
                 <th>
                     {id[1] + 1}
-                    <td className='cell'>
-                        <img id={id} src={src} onClick={play} />
+                    <td className='cell' onDrop={drop} onDragOver={allowDrop} >
+                        <img class="image1" id={id} src={src} onClick={play} draggable='false' />
                     </td>
                 </th>
             )
         }
         return (
-            <td className='cell'>
-                <img id={id} src={src} onClick={play} />
+            <td className='cell' onDrop={drop} onDragOver={allowDrop} >
+                <img class="image1" id={id} src={src} onClick={play} draggable='false' />
             </td>
         )
     }
@@ -248,6 +376,8 @@ const Table = (props) => {
                     )
                 })}
             </table>
+            <Button variant="success" onClick={set}>Set Ship</Button>
+            <Button variant="warning">Reset</Button>
         </Container>
     )
 }
