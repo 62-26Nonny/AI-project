@@ -201,7 +201,6 @@ const Table = (props) => {
 
     function foundShip(e) {
         
-
         // var ships = document.getElementsByClassName('parent')
         // var part_id = [];
 
@@ -215,8 +214,6 @@ const Table = (props) => {
                 is_DD_Alive = true
                 break;
             } else is_DD_Alive = false
-
-            
         }
 
         console.log(playerState.name + ': FOUND SHIP!!!')
@@ -330,7 +327,6 @@ const Table = (props) => {
 
     // สร้างตารางโดยรับค่า id และ src
     const createCell = (id, src) => {
-
 
         // ถ้าเป็นแถวแรกให้สร้าง header ระบุเลขช่องด้วยนอกจากนั้นก็สร้างแค่ช่องปกติ
         if (id[0] === 0) {
