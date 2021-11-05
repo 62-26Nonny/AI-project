@@ -119,6 +119,9 @@ const Table = (props) => {
     function calculateDensity() {
         var current_position
         var directions = { 'w': null, 'n': null, 'e': null, 's': null };
+        for (var i = 0; i < 100; i++) {
+            positions[i].probability = 0
+        }
         for (var shipName in ships) {
             var ship = ships[shipName]
             if (ship.alive) {
@@ -144,7 +147,7 @@ const Table = (props) => {
 
         for (var i = 0; i < 100; i++) {
             if (positions[i].probability > 0) {
-                positions[i].probability += Math.random() * randomness
+                positions[i].probability +=  Math.floor(Math.random() * randomness)
             }
 
             if (positions[i].fired) {
@@ -177,6 +180,7 @@ const Table = (props) => {
     //     text += positions[i].probability + ' '
 
     // }
+    console.log("After re-cal ")
     console.table(positions)
 
     //สร้าง plyer state โดยใช้รูปแบบ player
@@ -230,7 +234,7 @@ const Table = (props) => {
                 // console.log('Target cell '+ i + ':' + cell_id.id)
                 // console.log('ship part '+ i + ':' + ship.childNodes[i].id)
                 var ship_part = ship.childNodes[0]
-                ship_part.classList.add("image2");
+                // ship_part.classList.add("image2");
                 // ship_part.classList.add('hidden');
                 ship_part.classList.remove("part");
                 // cell_id.appendChild(ship.childNodes[i])
@@ -260,17 +264,17 @@ const Table = (props) => {
 
     }
 
-    // function check_boom() {
-    //     var ships = document.getElementsByClassName('parent')
-    //     var part_id = [];
+    function check_boom() {
+        var ships = document.getElementsByClassName('parent')
+        var part_id = [];
 
-    //     for (let index = 0; index < ships.length; index++) {
-    //         part_id.push(ships[index].childNodes[1].id.slice(0,2));
+        for (let index = 0; index < ships.length; index++) {
+            part_id.push(ships[index].childNodes[1].id.slice(0,2));
 
-    //     }
-    //     console.log (part_id)
+        }
+        console.log (part_id)
 
-    // }
+    }
 
     // ฟังก์ชั่นสุ่มเลขโดยรับค่า min max
     function getRandomInt(min, max) {
@@ -305,7 +309,7 @@ const Table = (props) => {
 
         // เมื่อเจอเรือให้บวกแต้มฝั่งผู้เล่นที่เจอ
         if (found) {
-            foundShip(e)
+            // foundShip(e)
 
             setPlayerState({
                 ...playerState,
@@ -331,12 +335,32 @@ const Table = (props) => {
     function checkShip(e) {
         // ให้ตัวแปล clicked เก็บตำแหน่งที่ผู้เล่นกด
         var clicked = [parseInt(e.target.id[0]), parseInt(e.target.id[2])]
-
+        console.log("Clicked at " + clicked)
         // เช็คว่าเจอเรือไหม (เรือ: "O")
         if (!(playerState.board[clicked[0] + 1][clicked[1] + 1] === "-")) {
             playerState.board[clicked[0] + 1][clicked[1] + 1] = "x"
+            console.log("Position at " + positions[parseInt(e.target.id[0]+e.target.id[2])].index)
+            positions[parseInt(e.target.id[0]+e.target.id[2])].fired = true 
+            positions[parseInt(e.target.id[0]+e.target.id[2])].hit = true
+            console.log('After hit')
+            console.table(positions)
+            calculateDensity()
+            var cells = document.getElementsByClassName("image2")
+            for (var i = 0; i < 100; i++) {
+                cells[i].innerHTML = positions[i].probability
+            }
+
             return true
         } else {
+            positions[parseInt(e.target.id[0]+e.target.id[2])].fired = true 
+            console.log('After fired ')
+            console.table(positions)
+            calculateDensity()
+            var cells = document.getElementsByClassName("image2")
+            for (var i = 0; i < 100; i++) {
+                cells[i].innerHTML = positions[i].probability
+            }
+
             return false
         }
     }
@@ -346,34 +370,34 @@ const Table = (props) => {
         e.target.src = 'https://tmsvalue.co.uk/wp-content/uploads/2017/03/Square-500x500-red.png'
     }
 
-    function foundShip(e) {
+    // function foundShip(e) {
 
-        // var ships = document.getElementsByClassName('parent')
-        // var part_id = [];
+    //     // var ships = document.getElementsByClassName('parent')
+    //     // var part_id = [];
 
-        // for (let index = 0; index < ships.length; index++) {
-        //     part_id.push(ships[index].childNodes[1].id.slice(0,2)); 
-        // }
-        var is_DD_Alive = true
-        for (var i = 0; i < 12; i++) {
-            console.log(playerState.board[i])
-            if ((playerState.board[i].includes("DD"))) {
-                is_DD_Alive = true
-                break;
-            } else is_DD_Alive = false
-        }
+    //     // for (let index = 0; index < ships.length; index++) {
+    //     //     part_id.push(ships[index].childNodes[1].id.slice(0,2)); 
+    //     // }
+    //     var is_DD_Alive = true
+    //     for (var i = 0; i < 12; i++) {
+    //         console.log(playerState.board[i])
+    //         if ((playerState.board[i].includes("DD"))) {
+    //             is_DD_Alive = true
+    //             break;
+    //         } else is_DD_Alive = false
+    //     }
 
-        console.log(playerState.name + ': FOUND SHIP!!!')
-        if (!is_DD_Alive) {
-            console.log('Destroyer Ship Sunk!')
-        }
-        // if(!(part_id.includes("DD"))){
-        //     console.log('Destroyer Ship Sunk!')
-        // }
+    //     console.log(playerState.name + ': FOUND SHIP!!!')
+    //     if (!is_DD_Alive) {
+    //         console.log('Destroyer Ship Sunk!')
+    //     }
+    //     // if(!(part_id.includes("DD"))){
+    //     //     console.log('Destroyer Ship Sunk!')
+    //     // }
 
-        e.target.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9qcrQeLufxv61jZ194tG5CJvux0p4U4-r2g&usqp=CAU'
-        console.log(playerState.board)
-    }
+    //     e.target.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9qcrQeLufxv61jZ194tG5CJvux0p4U4-r2g&usqp=CAU'
+    //     console.log(playerState.board)
+    // }
 
     function end() {
         console.log(playerState.name + 'WIN!!!')
@@ -463,11 +487,11 @@ const Table = (props) => {
     }
 
     useEffect(() => {
-        // generateShip(2)
-        // generateShip(3)
-        // generateShip(2)
+        generateShip(2)
+        generateShip(3)
         // generateShip(3)
         // generateShip(4)
+        // generateShip(5)
         console.log(playerState.name + " board: ")
         console.log(playerState.board)
     }, [setPlayerState])
@@ -480,15 +504,17 @@ const Table = (props) => {
             return (
                 <th>
                     {id[1] + 1}
-                    <td className='cell' onDrop={drop} onDragOver={allowDrop} >
+                    <td className='cell parent' onDrop={drop} onDragOver={allowDrop} >
                         <img class="image1" id={id} src={src} onClick={play} draggable='false' />
+                        <div class="image2"> {positions[id[1]].probability} </div>
                     </td>
                 </th>
             )
         }
         return (
-            <td className='cell' onDrop={drop} onDragOver={allowDrop} >
+            <td className='cell parent' onDrop={drop} onDragOver={allowDrop} >
                 <img class="image1" id={id} src={src} onClick={play} draggable='false' />
+                <div class="image2"> {positions[(parseInt(id[0].toString())+(id[1].toString()))].probability} </div>
             </td>
         )
     }
@@ -519,8 +545,8 @@ const Table = (props) => {
                     )
                 })}
             </table>
-            <Button variant="success" onClick={set}>Set Ship</Button>
-            <Button variant="warning">Reset</Button>
+            {/* <Button variant="success" onClick={set}>Set Ship</Button>
+            <Button variant="warning">Reset</Button> */}
         </Container>
     )
 }

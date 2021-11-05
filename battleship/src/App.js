@@ -3,22 +3,22 @@ import Table from './components/Table';
 import { Container, Row, Col, Alert, Card } from 'react-bootstrap'
 
 
-function allowDrop(ev) {
-  ev.preventDefault();
-}
+// function allowDrop(ev) {
+//   ev.preventDefault();
+// }
 
-function drag(ev) {
-  console.log(ev.target)
-  ev.dataTransfer.setData("text", ev.target.id);
+// function drag(ev) {
+//   console.log(ev.target)
+//   ev.dataTransfer.setData("text", ev.target.id);
 
-}
+// }
 
-function drop(ev) {
-  ev.preventDefault();
-  var data = ev.dataTransfer.getData("text");
-  console.log(data)
-  ev.target.appendChild(document.getElementById(data));
-}
+// function drop(ev) {
+//   ev.preventDefault();
+//   var data = ev.dataTransfer.getData("text");
+//   console.log(data)
+//   ev.target.appendChild(document.getElementById(data));
+// }
 
 
 
@@ -40,7 +40,7 @@ const App = () => {
           <Table player='Pre Boss' />
         </Col>
       </Row>
-
+{/* 
       <Row className='justify-content-center'>
 
         <Col>
@@ -102,7 +102,7 @@ const App = () => {
           </Row>
         </Col>
 
-      </Row>
+      </Row> */}
 
 
     </Container>
