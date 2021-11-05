@@ -155,11 +155,11 @@ const Table = (props) => {
                     for (var direction in directions) {
                         var hitStreak = 1
                         var checked_position = positions[i]
-                        while (checked_position[directions] && checked_position[directions].hit && !checked_position[directions].confirmed) {
+                        while (checked_position[direction] && checked_position[direction].hit && !checked_position[direction].confirmed) {
                             hitStreak++
-                            checked_position = checked_position[directions]
+                            checked_position = checked_position[direction]
                         }
-                        checked_position = checked_position[directions]
+                        checked_position = checked_position[direction]
                         if (checked_position && !checked_position.fired) {
                             checked_position.probability += hitStreak * 10
                         }
