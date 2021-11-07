@@ -1,5 +1,6 @@
 import './App.css';
 import Table from './components/Table';
+import { useState } from 'react';
 import { Container, Row, Col, Alert, Card } from 'react-bootstrap'
 
 
@@ -24,20 +25,26 @@ import { Container, Row, Col, Alert, Card } from 'react-bootstrap'
 
 
 const App = () => {
+
+  const player1 = 'gurumi'
+  const player2 = 'pboss'
+  const [turn, setTurn] = useState(player1)
+  const [player1pick, setPlayer1pick] = useState([])
+  const [player2pick, setPlayer2pick] = useState([])
   return (
     <Container>
       <h1>Battleship</h1>
 
       <Alert variant="success" className="text-center">
-        <Alert.Heading>Player _ turn</Alert.Heading>
+        <Alert.Heading>Player {turn} turn</Alert.Heading>
       </Alert>
 
       <Row className='justify-content-center'>
         <Col >
-          <Table player='Gurumi' />
+          <Table player={player1} enemy={player2} setTurn={setTurn} turn={turn} alreadypick={player1pick} setAlreadypick={setPlayer1pick}/>
         </Col>
         <Col>
-          <Table player='Pre Boss' />
+          <Table player={player2} enemy={player1} setTurn={setTurn} turn={turn} alreadypick={player2pick} setAlreadypick={setPlayer2pick}/>
         </Col>
       </Row>
 {/* 

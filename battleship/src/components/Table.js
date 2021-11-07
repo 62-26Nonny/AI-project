@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 const Table = (props) => {
 
     const randomness = 3
-
     var positions = []
     for (var i = 0; i < 100; i++) {
         var row = Math.floor(i / 10)
@@ -164,22 +163,37 @@ const Table = (props) => {
 
     // ฟั่งชั่นที่ทำงานเมื่อผู้เล่นกดช่องตาราง 
     function play(e) {
-        var allDead = true
+        if (props.alreadypick.includes(e.target.id)) {
+            console.log('you choose the same position');
+        }
+        else {
+            if(props.turn === props.player){
+                var allDead = true
 
-        //เช็คว่ามีเรือรึเปล่า
-        checkShip(e)
-
-        //เช็คว่าเกมจบรึยัง
-        for (var ship in playerState.ships) {
-            if (playerState.ships[ship].alive) {
-                allDead = false
+                //เช็คว่ามีเรือรึเปล่า
+                props.setAlreadypick(arr => [...arr, e.target.id])
+                checkShip(e)
+                //เช็คว่าเกมจบรึยัง
+                for (var ship in playerState.ships) {
+                    if (playerState.ships[ship].alive) {
+                        allDead = false
+                    }
+                }
+                
+                if (allDead) {
+                    end()
+                    clearInterval(setInterval(AI, 1000))
+                }
             }
+            else if(props.turn !== props.player){
+                console.log('You can not play')
+            }
+            else {
+                console.log('bug')
+            }
+            
         }
 
-        if (allDead) {
-            end()
-            clearInterval(setInterval(AI, 1000))
-        }
     }
 
     // ฟังก์ชั่นสุ่มสำหรับเซ็กว่าผู้เล่นยิงโดนเรือตรงข้ามหรือไม่
@@ -235,7 +249,9 @@ const Table = (props) => {
             // console.log('After hit')
             e.target.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9qcrQeLufxv61jZ194tG5CJvux0p4U4-r2g&usqp=CAU'
             flag = true
+            props.setTurn(props.player)
         } else {
+            props.setTurn(props.enemy)
             playerState.positions[e.target.id].fired = true
             // console.log('After fired ')
             console.log(playerState.name + ': nothing here...')
@@ -335,7 +351,7 @@ const Table = (props) => {
                 max_position = i
             }
         }
-        if(max_position){
+        if (max_position) {
             document.getElementById(max_position).click()
             // console.log(document.getElementById(max_position))
             console.log(max_position)
