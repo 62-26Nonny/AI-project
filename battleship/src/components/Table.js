@@ -1,5 +1,6 @@
 import { Container, Button } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
+import {AI} from '../AI/AI_team1'
 
 const Table = (props) => {
 
@@ -141,16 +142,19 @@ const Table = (props) => {
 
             if (playerState.positions[i].fired) {
                 if (playerState.positions[i].hit && !playerState.positions[i].sunk) {
+                    
                     for (var direction in directions) {
                         var hitStreak = 1
                         var checked_position = playerState.positions[i]
-                        while (checked_position[direction] && checked_position[direction].hit && !checked_position[direction].confirmed) {
+                        while (checked_position[direction] && checked_position[direction].hit && !checked_position[direction].sunk) {
                             hitStreak++
+                            console.log('Hitstreak now is ' + String(hitStreak))
                             checked_position = checked_position[direction]
                         }
                         checked_position = checked_position[direction]
                         if (checked_position && !checked_position.fired) {
-                            checked_position.probability += hitStreak * 10
+                            checked_position.probability += hitStreak * 100
+                            console.log(checked_position.index + ' is increase for ' + String(hitStreak * 100))
                         }
                     }
                 }
@@ -158,8 +162,6 @@ const Table = (props) => {
             }
         }
     }
-
-    calculateDensity()
 
     // ฟั่งชั่นที่ทำงานเมื่อผู้เล่นกดช่องตาราง 
     function play(e) {
@@ -211,6 +213,11 @@ const Table = (props) => {
                     playerState.ships['battleship'].life--
                     if (playerState.ships['battleship'].life === 0) {
                         playerState.ships['battleship'].alive = false
+                        var prow_position = playerState.ships['battleship'].position
+                        var directions = (playerState.ships['battleship'].orientation == 'e') ? 1 : 10
+                        for (var i=0; i < playerState.ships['battleship'].length; i++) {
+                            playerState.positions[prow_position + (i * directions)].sunk = true
+                        }
                         console.log(playerState.name + "'s Battleship is sunk!!")
                     }
                     break
@@ -218,6 +225,11 @@ const Table = (props) => {
                     playerState.ships['destroyer'].life--
                     if (playerState.ships['destroyer'].life === 0) {
                         playerState.ships['destroyer'].alive = false
+                        var prow_position = playerState.ships['destroyer'].position
+                        var directions = (playerState.ships['destroyer'].orientation == 'e') ? 1 : 10
+                        for (var i=0; i < playerState.ships['destroyer'].length; i++) {
+                            playerState.positions[prow_position + (i * directions)].sunk = true
+                        }
                         console.log(playerState.name + "'s Destroyer is sunk!!")
                     }
                     break
@@ -225,6 +237,11 @@ const Table = (props) => {
                     playerState.ships['aircraftcarrier'].life--
                     if (playerState.ships['aircraftcarrier'].life === 0) {
                         playerState.ships['aircraftcarrier'].alive = false
+                        var prow_position = playerState.ships['aircraftcarrier'].position
+                        var directions = (playerState.ships['aircraftcarrier'].orientation == 'e') ? 1 : 10
+                        for (var i=0; i < playerState.ships['aircraftcarrier'].length; i++) {
+                            playerState.positions[prow_position + (i * directions)].sunk = true
+                        }
                         console.log(playerState.name + "'s Aircraftcarrier is sunk!!")
                     }
                     break
@@ -232,6 +249,11 @@ const Table = (props) => {
                     playerState.ships['submarine'].life--
                     if (playerState.ships['submarine'].life === 0) {
                         playerState.ships['submarine'].alive = false
+                        var prow_position = playerState.ships['submarine'].position
+                        var directions = (playerState.ships['submarine'].orientation == 'e') ? 1 : 10
+                        for (var i=0; i < playerState.ships['submarine'].length; i++) {
+                            playerState.positions[prow_position + (i * directions)].sunk = true
+                        }
                         console.log(playerState.name + "'s Submarine is sunk!!")
                     }
                     break
@@ -239,6 +261,11 @@ const Table = (props) => {
                     playerState.ships['patrolboat'].life--
                     if (playerState.ships['patrolboat'].life === 0) {
                         playerState.ships['patrolboat'].alive = false
+                        var prow_position = playerState.ships['patrolboat'].position
+                        var directions = (playerState.ships['patrolboat'].orientation == 'e') ? 1 : 10
+                        for (var i=0; i < playerState.ships['patrolboat'].length; i++) {
+                            playerState.positions[prow_position + (i * directions)].sunk = true
+                        }
                         console.log(playerState.name + "'s Patrolboat is sunk!!")
                     }
                     break
@@ -261,7 +288,7 @@ const Table = (props) => {
 
         // console.table(playerState.positions)
         calculateDensity()
-        var cells = document.getElementsByClassName("image2")
+        var cells = document.getElementsByClassName(playerState.name + ' image2')
         for (var i = 0; i < 100; i++) {
             cells[i].innerHTML = playerState.positions[i].probability
         }
@@ -342,25 +369,29 @@ const Table = (props) => {
         return Math.floor(Math.random() * 100);
     }
 
-    function AI() {
-        var max = 0
-        var max_position
-        for (var i in playerState.positions) {
-            if (max < playerState.positions[i].probability) {
-                max = playerState.positions[i].probability
-                max_position = i
-            }
-        }
-        if (max_position) {
-            document.getElementById(max_position).click()
-            // console.log(document.getElementById(max_position))
-            console.log(max_position)
-        }
-    }
+    // function AI() {
+    //     var max = 0
+    //     var max_position
+    //     var table = document.getElementById(playerState.name)
+    //     var cells = table.getElementsByClassName('image1')
+    //     for (var i in playerState.positions) {
+    //         if (max < playerState.positions[i].probability) {
+    //             max = playerState.positions[i].probability
+    //             max_position = i
+    //         }
+    //     }
+    //     if (max_position) {
+    //         cells[max_position].click()
+    //         // console.log(document.getElementById(max_position))
+    //         console.log(max_position)
+    //     }
+    // }
 
     function StartPlaying() {
         setInterval(AI, 1000)
     }
+
+    calculateDensity()
 
     useEffect(() => {
         placeShips()
@@ -379,7 +410,7 @@ const Table = (props) => {
                     {id}
                     <td className='cell parent'>
                         <img class="image1" id={id} src={src} onClick={play} />
-                        <div class="image2"> {Math.floor(playerState.positions[id].probability)} </div>
+                        <div class={playerState.name + ' image2'}> {Math.floor(playerState.positions[id].probability)} </div>
                     </td>
                 </th>
             )
@@ -387,7 +418,7 @@ const Table = (props) => {
         return (
             <td className='cell parent'>
                 <img class="image1" id={id} src={src} onClick={play} />
-                <div class="image2"> {Math.floor(playerState.positions[id].probability)} </div>
+                <div class={playerState.name + ' image2'}> {Math.floor(playerState.positions[id].probability)} </div>
             </td>
         )
     }
@@ -395,7 +426,7 @@ const Table = (props) => {
     return (
         <Container>
             <h2>{props.player}</h2>
-            <table>
+            <table id={playerState.name}>
 
                 {Array.from({ length: 10 }).map((_, row) => {
 
