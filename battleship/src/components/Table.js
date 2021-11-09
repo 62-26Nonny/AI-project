@@ -1,6 +1,6 @@
 import { Container, Button } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
-import {AI} from '../AI/AI_team1'
+import { AI, calculateDensity } from '../AI/AI_team1'
 
 const Table = (props) => {
 
@@ -90,8 +90,6 @@ const Table = (props) => {
     //สร้าง plyer state โดยใช้รูปแบบ player
     const [playerState, setPlayerState] = useState(player)
 
-    var gameover = false
-
     function tryShip(ship, position, direction, propertyToTest) {
         var check_position = playerState.positions[position]
         var flag = true
@@ -105,62 +103,6 @@ const Table = (props) => {
         }
 
         return flag
-    }
-
-    function calculateDensity() {
-        var current_position
-        var directions = { 'w': null, 'n': null, 'e': null, 's': null };
-        for (var i = 0; i < 100; i++) {
-            playerState.positions[i].probability = 0
-        }
-        for (var shipName in playerState.ships) {
-            var ship = playerState.ships[shipName]
-            if (ship.alive) {
-                for (var i = 0; i < 100; i++) {
-                    if (tryShip(ship, i, 'e', 'fired')) {
-                        current_position = playerState.positions[i]
-                        for (var j = 0; j < ship.length; j++) {
-                            current_position.probability++
-                            current_position = current_position['e']
-                        }
-                    }
-                    if (tryShip(ship, i, 's', 'fired')) {
-                        current_position = playerState.positions[i]
-                        for (var j = 0; j < ship.length; j++) {
-                            current_position.probability++
-                            current_position = current_position['s']
-                        }
-                    }
-                }
-            }
-        }
-
-        for (var i = 0; i < 100; i++) {
-            if (playerState.positions[i].probability > 0) {
-                playerState.positions[i].probability += Math.floor(Math.random() * randomness)
-            }
-
-            if (playerState.positions[i].fired) {
-                if (playerState.positions[i].hit && !playerState.positions[i].sunk) {
-                    
-                    for (var direction in directions) {
-                        var hitStreak = 1
-                        var checked_position = playerState.positions[i]
-                        while (checked_position[direction] && checked_position[direction].hit && !checked_position[direction].sunk) {
-                            hitStreak++
-                            console.log('Hitstreak now is ' + String(hitStreak))
-                            checked_position = checked_position[direction]
-                        }
-                        checked_position = checked_position[direction]
-                        if (checked_position && !checked_position.fired) {
-                            checked_position.probability += hitStreak * 100
-                            console.log(checked_position.index + ' is increase for ' + String(hitStreak * 100))
-                        }
-                    }
-                }
-                playerState.positions[i].probability = -1
-            }
-        }
     }
 
     // ฟั่งชั่นที่ทำงานเมื่อผู้เล่นกดช่องตาราง 
@@ -185,6 +127,7 @@ const Table = (props) => {
                 if (allDead) {
                     end()
                     clearInterval(setInterval(AI, 1000))
+                    console.log('GAME OVER')
                 }
             }
             else if(props.turn !== props.player){
@@ -287,7 +230,7 @@ const Table = (props) => {
         }
 
         // console.table(playerState.positions)
-        calculateDensity()
+        calculateDensity(playerState)
         var cells = document.getElementsByClassName(playerState.name + ' image2')
         for (var i = 0; i < 100; i++) {
             cells[i].innerHTML = playerState.positions[i].probability
@@ -369,29 +312,11 @@ const Table = (props) => {
         return Math.floor(Math.random() * 100);
     }
 
-    // function AI() {
-    //     var max = 0
-    //     var max_position
-    //     var table = document.getElementById(playerState.name)
-    //     var cells = table.getElementsByClassName('image1')
-    //     for (var i in playerState.positions) {
-    //         if (max < playerState.positions[i].probability) {
-    //             max = playerState.positions[i].probability
-    //             max_position = i
-    //         }
-    //     }
-    //     if (max_position) {
-    //         cells[max_position].click()
-    //         // console.log(document.getElementById(max_position))
-    //         console.log(max_position)
-    //     }
-    // }
-
-    function StartPlaying() {
+    function startPlaying() {
         setInterval(AI, 1000)
     }
 
-    calculateDensity()
+    calculateDensity(playerState)
 
     useEffect(() => {
         placeShips()
@@ -448,7 +373,7 @@ const Table = (props) => {
                     )
                 })}
             </table>
-            <Button onClick={StartPlaying}>Start</Button>
+            <Button onClick={startPlaying}>Start</Button>
         </Container>
     )
 }
