@@ -5,6 +5,9 @@ import { AI2 } from '../AI/AI_team2'
 
 const Table1 = (props) => {
 
+    const water = new Audio('../sfx/water.mp3');
+    const explosion = new Audio('../sfx/explosion2.mp3');
+
     const randomness = 3
     var positions = []
     for (var i = 0; i < 100; i++) {
@@ -112,7 +115,7 @@ const Table1 = (props) => {
             console.log(props.enemy + ' choose the same position');
         }
         else {
-            if(props.turn === props.player){
+            if(props.turn === props.enemy){
                 var allDead = true
 
                 //เช็คว่ามีเรือรึเปล่า
@@ -127,16 +130,17 @@ const Table1 = (props) => {
                 
                 if (allDead) {
                     end()
-                    clearInterval(setInterval(AI, 2000))
-                    clearInterval(setInterval(AI2, 2000, playerState)) //to stop Nut's AI
+                    clearInterval(setInterval(AI, 100))
+                    clearInterval(setInterval(AI2, 100, playerState)) //to stop Nut's AI
                     console.log('GAME OVER')
+                    props.setTurn("Team 2 win")
                 }
             }
             else if(props.turn !== props.player){
                 console.log(props.enemy + ' can not play')
             }
             else {
-                console.log('bug')
+                console.log('Not ' + props.enemy + ' turn')
             }
 
         }
@@ -221,14 +225,16 @@ const Table1 = (props) => {
             // console.log('After hit')
             e.target.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9qcrQeLufxv61jZ194tG5CJvux0p4U4-r2g&usqp=CAU'
             flag = true
-            props.setTurn(props.player)
-        } else {
             props.setTurn(props.enemy)
+            explosion.play();
+        } else {
+            props.setTurn(props.player)
             playerState.positions[e.target.id].fired = true
             // console.log('After fired ')
             console.log(playerState.name + ': nothing here...')
             e.target.src = 'https://tmsvalue.co.uk/wp-content/uploads/2017/03/Square-500x500-red.png'
             flag = false
+            water.play();
         }
 
         // console.table(playerState.positions)
@@ -314,7 +320,7 @@ const Table1 = (props) => {
     }
 
     function startPlaying() {        
-        setInterval(AI, 2000)
+        setInterval(AI2, 100, playerState)
     }
 
     useEffect(() => {
