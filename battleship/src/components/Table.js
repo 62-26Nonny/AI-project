@@ -1,6 +1,7 @@
 import { Container, Button } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
 import { AI, calculateDensity } from '../AI/AI_team1'
+import { AI2 } from '../AI/AI_team2'
 
 const Table = (props) => {
 
@@ -127,6 +128,7 @@ const Table = (props) => {
                 if (allDead) {
                     end()
                     clearInterval(setInterval(AI, 1000))
+                    // clearInterval(setInterval(AI2, 1000, playerState)) to stop Nut's AI
                     console.log('GAME OVER')
                 }
             }
@@ -136,7 +138,7 @@ const Table = (props) => {
             else {
                 console.log('bug')
             }
-            
+
         }
 
     }
@@ -314,6 +316,7 @@ const Table = (props) => {
 
     function startPlaying() {
         setInterval(AI, 1000)
+        // setInterval(AI2, 1000, playerState) to use Nut's AI
     }
 
     calculateDensity(playerState)
