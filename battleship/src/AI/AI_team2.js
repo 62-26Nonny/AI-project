@@ -2,7 +2,7 @@ export function AI2(playerState) {
     var pos
     var max = 0
     var max_position
-    var table = document.getElementById('gurumi')
+    var table = document.getElementById('Team 1')
     var cells = table.getElementsByClassName('image1')
 
     // Pick the cell with highest prob

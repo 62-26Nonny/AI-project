@@ -18,9 +18,9 @@ function tryShip(playerState, ship, position, direction, propertyToTest) {
 export const AI = () => {
     var max = 0
     var max_position
-    var table = document.getElementById('gurumi')
+    var table = document.getElementById('Team 2')
     var cells = table.getElementsByClassName('image1')
-    var positions = Array.from(table.getElementsByClassName('gurumi image2'))
+    var positions = Array.from(table.getElementsByClassName('Team 2 image2'))
     positions.forEach((position, index) => {
         if (max < parseInt(position.innerHTML)) {
             max = parseInt(position.innerHTML)

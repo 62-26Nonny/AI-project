@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { AI, calculateDensity } from '../AI/AI_team1'
 import { AI2 } from '../AI/AI_team2'
 
-const Table = (props) => {
+const Table1 = (props) => {
 
     const randomness = 3
     var positions = []
@@ -109,7 +109,7 @@ const Table = (props) => {
     // ฟั่งชั่นที่ทำงานเมื่อผู้เล่นกดช่องตาราง 
     function play(e) {
         if (props.alreadypick.includes(e.target.id)) {
-            console.log('you choose the same position');
+            console.log(props.enemy + ' choose the same position');
         }
         else {
             if(props.turn === props.player){
@@ -127,13 +127,13 @@ const Table = (props) => {
                 
                 if (allDead) {
                     end()
-                    clearInterval(setInterval(AI, 1000))
-                    // clearInterval(setInterval(AI2, 1000, playerState)) to stop Nut's AI
+                    clearInterval(setInterval(AI, 2000))
+                    clearInterval(setInterval(AI2, 2000, playerState)) //to stop Nut's AI
                     console.log('GAME OVER')
                 }
             }
             else if(props.turn !== props.player){
-                console.log('You can not play')
+                console.log(props.enemy + ' can not play')
             }
             else {
                 console.log('bug')
@@ -232,7 +232,6 @@ const Table = (props) => {
         }
 
         // console.table(playerState.positions)
-        calculateDensity(playerState)
         var cells = document.getElementsByClassName(playerState.name + ' image2')
         for (var i = 0; i < 100; i++) {
             cells[i].innerHTML = playerState.positions[i].probability
@@ -314,12 +313,9 @@ const Table = (props) => {
         return Math.floor(Math.random() * 100);
     }
 
-    function startPlaying() {
-        setInterval(AI, 1000)
-        // setInterval(AI2, 1000, playerState) to use Nut's AI
+    function startPlaying() {        
+        setInterval(AI, 2000)
     }
-
-    calculateDensity(playerState)
 
     useEffect(() => {
         placeShips()
@@ -381,4 +377,4 @@ const Table = (props) => {
     )
 }
 
-export default Table
+export default Table1

@@ -1,8 +1,9 @@
 import './App.css';
-import Table from './components/Table';
+import Table1 from './components/TableTeam1';
+import Table2 from './components/TableTeam2';
 import { useState } from 'react';
 import { Container, Row, Col, Alert, Card } from 'react-bootstrap'
-
+// import { startPlaying } from './components/Table';
 
 // function allowDrop(ev) {
 //   ev.preventDefault();
@@ -26,9 +27,9 @@ import { Container, Row, Col, Alert, Card } from 'react-bootstrap'
 
 const App = () => {
 
-  const player1 = 'gurumi'
-  const player2 = 'pboss'
-  const [turn, setTurn] = useState(player1)
+  const player1 = 'Team 1'
+  const player2 = 'Team 2'
+  const [turn, setTurn] = useState(player2)
   const [player1pick, setPlayer1pick] = useState([])
   const [player2pick, setPlayer2pick] = useState([])
   return (
@@ -41,10 +42,10 @@ const App = () => {
 
       <Row className='justify-content-center'>
         <Col >
-          <Table player={player1} enemy={player2} setTurn={setTurn} turn={turn} alreadypick={player1pick} setAlreadypick={setPlayer1pick}/>
+          <Table1 player={player1} enemy={player2} setTurn={setTurn} turn={turn} alreadypick={player1pick} setAlreadypick={setPlayer1pick}/>
         </Col>
         <Col>
-          <Table player={player2} enemy={player1} setTurn={setTurn} turn={turn} alreadypick={player2pick} setAlreadypick={setPlayer2pick}/>
+          <Table2 player={player2} enemy={player1} setTurn={setTurn} turn={turn} alreadypick={player2pick} setAlreadypick={setPlayer2pick}/>
         </Col>
       </Row>
 {/* 
