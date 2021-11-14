@@ -251,10 +251,6 @@ const Table1 = (props) => {
         }
 
         // console.table(playerState.positions)
-        var cells = document.getElementsByClassName(playerState.name + ' image2')
-        for (var i = 0; i < 100; i++) {
-            cells[i].innerHTML = playerState.positions[i].probability
-        }
 
         return flag
     }
