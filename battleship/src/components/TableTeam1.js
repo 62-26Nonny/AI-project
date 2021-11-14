@@ -8,6 +8,8 @@ const Table1 = (props) => {
     const water = new Audio('../sfx/water.mp3');
     const explosion = new Audio('../sfx/explosion2.mp3');
 
+
+
     const randomness = 3
     var positions = []
     for (var i = 0; i < 100; i++) {
@@ -115,7 +117,7 @@ const Table1 = (props) => {
             console.log(props.enemy + ' choose the same position');
         }
         else {
-            if(props.turn === props.enemy){
+            if(props.turn === 'Team 2 turn'){
                 var allDead = true
 
                 //เช็คว่ามีเรือรึเปล่า
@@ -130,13 +132,13 @@ const Table1 = (props) => {
                 
                 if (allDead) {
                     end()
-                    clearInterval(setInterval(AI, 100))
-                    clearInterval(setInterval(AI2, 100, playerState)) //to stop Nut's AI
+                    clearInterval(setInterval(AI, 1000))
+                    clearInterval(setInterval(AI2, 1000, playerState)) //to stop Nut's AI
                     console.log('GAME OVER')
                     props.setTurn("Team 2 win")
                 }
             }
-            else if(props.turn === props.player){
+            else if(props.turn !== 'Team 2 turn'){
                 console.log(props.enemy + ' can not play')
             }
             else {
@@ -144,7 +146,7 @@ const Table1 = (props) => {
             }
 
         }
-
+        console.log(props.turn)
     }
 
     // ฟังก์ชั่นสุ่มสำหรับเซ็กว่าผู้เล่นยิงโดนเรือตรงข้ามหรือไม่
@@ -156,6 +158,8 @@ const Table1 = (props) => {
         var flag = false
         // เช็คว่าเจอเรือไหม (เรือ: "O")
         var check_cell = playerState.board[row + 1][col + 1]
+        var table = document.getElementById('Team 1 turn')
+        var cells = table.getElementsByClassName('image1')
         if (!(check_cell === "-")) {
             switch (check_cell) {
                 case 'B':
@@ -166,6 +170,7 @@ const Table1 = (props) => {
                         var directions = (playerState.ships['battleship'].orientation == 'e') ? 1 : 10
                         for (var i=0; i < playerState.ships['battleship'].length; i++) {
                             playerState.positions[prow_position + (i * directions)].sunk = true
+                            cells[prow_position + (i * directions)].src = 'http://nwuc.edu.zm/wp-content/uploads/2016/12/Square-500x500-dark-grey.png'
                         }
                         console.log(playerState.name + "'s Battleship is sunk!!")
                     }
@@ -178,6 +183,7 @@ const Table1 = (props) => {
                         var directions = (playerState.ships['destroyer'].orientation == 'e') ? 1 : 10
                         for (var i=0; i < playerState.ships['destroyer'].length; i++) {
                             playerState.positions[prow_position + (i * directions)].sunk = true
+                            cells[prow_position + (i * directions)].src = 'http://nwuc.edu.zm/wp-content/uploads/2016/12/Square-500x500-dark-grey.png'
                         }
                         console.log(playerState.name + "'s Destroyer is sunk!!")
                     }
@@ -190,6 +196,7 @@ const Table1 = (props) => {
                         var directions = (playerState.ships['aircraftcarrier'].orientation == 'e') ? 1 : 10
                         for (var i=0; i < playerState.ships['aircraftcarrier'].length; i++) {
                             playerState.positions[prow_position + (i * directions)].sunk = true
+                            cells[prow_position + (i * directions)].src = 'http://nwuc.edu.zm/wp-content/uploads/2016/12/Square-500x500-dark-grey.png'
                         }
                         console.log(playerState.name + "'s Aircraftcarrier is sunk!!")
                     }
@@ -202,6 +209,7 @@ const Table1 = (props) => {
                         var directions = (playerState.ships['submarine'].orientation == 'e') ? 1 : 10
                         for (var i=0; i < playerState.ships['submarine'].length; i++) {
                             playerState.positions[prow_position + (i * directions)].sunk = true
+                            cells[prow_position + (i * directions)].src = 'http://nwuc.edu.zm/wp-content/uploads/2016/12/Square-500x500-dark-grey.png'
                         }
                         console.log(playerState.name + "'s Submarine is sunk!!")
                     }
@@ -212,8 +220,11 @@ const Table1 = (props) => {
                         playerState.ships['patrolboat'].alive = false
                         var prow_position = playerState.ships['patrolboat'].position
                         var directions = (playerState.ships['patrolboat'].orientation == 'e') ? 1 : 10
+
                         for (var i=0; i < playerState.ships['patrolboat'].length; i++) {
                             playerState.positions[prow_position + (i * directions)].sunk = true
+                            cells[prow_position + (i * directions)].src = 'http://nwuc.edu.zm/wp-content/uploads/2016/12/Square-500x500-dark-grey.png'
+
                         }
                         console.log(playerState.name + "'s Patrolboat is sunk!!")
                     }
@@ -223,7 +234,9 @@ const Table1 = (props) => {
             playerState.positions[e.target.id].fired = true
             playerState.positions[e.target.id].hit = true
             // console.log('After hit')
-            e.target.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9qcrQeLufxv61jZ194tG5CJvux0p4U4-r2g&usqp=CAU'
+            if(playerState.positions[e.target.id].sunk === false){
+                e.target.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9qcrQeLufxv61jZ194tG5CJvux0p4U4-r2g&usqp=CAU'
+            }
             flag = true
             props.setTurn(props.enemy)
             explosion.play();
@@ -231,7 +244,7 @@ const Table1 = (props) => {
             props.setTurn(props.player)
             playerState.positions[e.target.id].fired = true
             // console.log('After fired ')
-            console.log(playerState.name + ': nothing here...')
+            console.log(props.enemy + ': nothing here...')
             e.target.src = 'https://tmsvalue.co.uk/wp-content/uploads/2017/03/Square-500x500-red.png'
             flag = false
             water.play();
@@ -320,7 +333,7 @@ const Table1 = (props) => {
     }
 
     function startPlaying() {        
-        setInterval(AI2, 100, playerState)
+        setInterval(AI2, 1000, playerState)
     }
 
     useEffect(() => {
@@ -355,7 +368,7 @@ const Table1 = (props) => {
 
     return (
         <Container>
-            <h2>{props.player}</h2>
+            <h2>Team 1</h2>
             <table id={playerState.name}>
 
                 {Array.from({ length: 10 }).map((_, row) => {

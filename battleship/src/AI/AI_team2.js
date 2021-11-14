@@ -2,7 +2,7 @@ export function AI2(playerState) {
     var pos
     var max = 0
     var max_position
-    var table = document.getElementById('Team 1')
+    var table = document.getElementById('Team 1 turn')
     var cells = table.getElementsByClassName('image1')
 
     // Pick the cell with highest prob
@@ -22,6 +22,7 @@ export function AI2(playerState) {
         } while (playerState.positions[pos].fired)
         max_position = pos
     }
+    console.log('AI team 2 ' + max_position)
 
     if(max_position >= 0) {
         cells[max_position].click()

@@ -17,22 +17,18 @@ function tryShip(playerState, ship, position, direction, propertyToTest) {
 
 export const AI = () => {
     var max = 0
-    var max_position
-    var table = document.getElementById('Team 2')
+    var max_position = 0
+    var table = document.getElementById('Team 2 turn')
     var cells = table.getElementsByClassName('image1')
-    var positions = Array.from(table.getElementsByClassName('Team 2 image2'))
+    var positions = Array.from(table.getElementsByClassName('Team 2 turn image2'))
     positions.forEach((position, index) => {
         if (max < parseInt(position.innerHTML)) {
             max = parseInt(position.innerHTML)
             max_position = index
         }
     })
-
-    if (max_position) {
-        cells[max_position].click()
-        // console.log(document.getElementById(max_position))
-        console.log(max_position)
-    }
+    console.log('AI team 1 ' + max_position)
+    cells[max_position].click()
 }
 
 export function calculateDensity(playerState) {
