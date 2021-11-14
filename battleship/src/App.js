@@ -10,15 +10,40 @@ const App = () => {
 
   const player1 = 'Team 1'
   const player2 = 'Team 2'
-  const [turn, setTurn] = useState(player2)
+  var isShow = true
+  const [turn, setTurn] = useState(player1)
   const [player1pick, setPlayer1pick] = useState([])
   const [player2pick, setPlayer2pick] = useState([])
 
-  // function startPlaying() {
-  //   console.log("START")
-  //   const button2 = document.getElementById('button_AI2')
-  //   button2.click()
-  // }
+  function startPlaying() {
+    console.log("START")
+    document.getElementById('button_AI1').click()
+    document.getElementById('button_AI2').click()
+  }
+
+  function toggleNumber() {
+    var team1_cells = Array.from(document.getElementsByClassName(player1 + ' image2'))
+    var team2_cells = Array.from(document.getElementsByClassName(player2 + ' image2'))
+
+    if(isShow){
+      team1_cells.forEach(cell => {
+        cell.classList.add('hidden')
+      })
+      team2_cells.forEach(cell => {
+        cell.classList.add('hidden')
+      })
+      isShow = false
+    }
+    else {
+      team1_cells.forEach(cell => {
+        cell.classList.remove('hidden')
+      })
+      team2_cells.forEach(cell => {
+        cell.classList.remove('hidden')
+      })
+      isShow = true
+    }
+  }
 
   return (
     <Container>
@@ -39,7 +64,8 @@ const App = () => {
 
       <Row className='justify-content-center'>
         <Col md={6} className="text-center">
-          <Button className="px-5" variant="danger"  > Start </Button>
+          <Button className="px-5" variant="danger" onClick={startPlaying}> Start </Button>
+          <Button onClick={toggleNumber}> Show/Hide Number </Button>
         </Col>
       </Row>
     </Container>

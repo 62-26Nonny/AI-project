@@ -136,7 +136,7 @@ const Table2 = (props) => {
                     props.setTurn("Team 1 win")
                 }
             }
-            else if(props.turn !== props.player){
+            else if(props.turn === props.player){
                 console.log(props.enemy + ' can not play')
             }
             else {
@@ -381,7 +381,7 @@ const Table2 = (props) => {
                     )
                 })}
             </table>
-            <Button onClick={startPlaying}>Start</Button>
+            <Button id='button_AI2' className='hidden' onClick={startPlaying}>Start</Button>
         </Container>
     )
 }
