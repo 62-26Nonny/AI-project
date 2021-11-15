@@ -390,7 +390,9 @@ const Table2 = (props) => {
                     )
                 })}
             </table>
-            <Button id='button_AI2' className='hidden' onClick={startPlaying}>Start</Button>
+            <div className='mt-2 row justify-content-center'>
+                <Button id='button_AI2' className='col-2' onClick={startPlaying}>Start</Button>
+            </div>
         </Container>
     )
 }
