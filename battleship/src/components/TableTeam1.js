@@ -363,7 +363,7 @@ const Table1 = (props) => {
     }
 
     return (
-        <Container>
+        <Container >
             <h2>Team 1</h2>
             <table id={playerState.name}>
 
@@ -387,7 +387,9 @@ const Table1 = (props) => {
                     )
                 })}
             </table>
-            <Button id='button_AI1' className='hidden' onClick={startPlaying}>Start</Button>
+            <div className='mt-2 row justify-content-center'>
+                <Button id='button_AI1' className='col-2' onClick={startPlaying}>Start</Button>
+            </div>
         </Container>
     )
 }
