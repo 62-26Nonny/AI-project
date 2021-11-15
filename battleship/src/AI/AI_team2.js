@@ -2,7 +2,7 @@ export function AI2(playerState) {
     var pos
     var max = 0
     var max_position
-    var table = document.getElementById('Team 1')
+    var table = document.getElementById('Team 1 turn')
     var cells = table.getElementsByClassName('image1')
 
     // Pick the cell with highest prob
@@ -22,6 +22,7 @@ export function AI2(playerState) {
         } while (playerState.positions[pos].fired)
         max_position = pos
     }
+    console.log('AI team 2 ' + max_position)
 
     if(max_position >= 0) {
         cells[max_position].click()
@@ -77,7 +78,7 @@ function calculateNextPos(playerState, current_position) {
                   [ ] [ ] [ ]
                 
                 */ 
-                var checker1 = adjacent[oppositeDirection]
+                var checker1 = currentCell
                 var checker2 = checker1[oppositeDirection]
                 if(checker1){
                     while(checker1 && checker1.hit && !checker1.sunk && checker2 && checker2.hit && !checker2.sunk){
@@ -102,7 +103,7 @@ function calculateNextPos(playerState, current_position) {
                         checker2 = checker2[oppositeDirection]
                     }
                 }
-                if(checker2)
+                if(checker2 && checker2.probability >= 0)
                 {
                     checker2.probability *= streak
                 }
@@ -151,7 +152,7 @@ function calculateNextPos(playerState, current_position) {
                     streak += 1
                     checker1 = checker1[direction]
                 }
-                if(checker1 && checker1 >= 0)
+                if(checker1 && checker1.probability >= 0)
                 {
                     checker1.probability *= streak
                 }
@@ -172,6 +173,10 @@ function calculateNextPos(playerState, current_position) {
         }
     }
 
-    console.log("")
+    var cells = document.getElementsByClassName(playerState.name + ' image2')
+    for (var i = 0; i < 100; i++) {
+        cells[i].innerHTML = playerState.positions[i].probability
+    }
+
 }
 

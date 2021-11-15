@@ -8,8 +8,8 @@ import { Container, Row, Col, Alert, Button } from 'react-bootstrap'
 
 const App = () => {
 
-  const player1 = 'Team 1'
-  const player2 = 'Team 2'
+  const player1 = 'Team 1 turn'
+  const player2 = 'Team 2 turn'
   var isShow = true
   const [turn, setTurn] = useState(player1)
   const [player1pick, setPlayer1pick] = useState([])
@@ -50,7 +50,7 @@ const App = () => {
       <h1>Battleship</h1>
 
       <Alert variant="success" className="text-center">
-        <Alert.Heading>{turn} turn </Alert.Heading>
+        <Alert.Heading>{turn}</Alert.Heading>
       </Alert>
 
       <Row className='justify-content-center'>
@@ -62,10 +62,10 @@ const App = () => {
         </Col>
       </Row>
 
-      <Row className='justify-content-center'>
-        <Col md={6} className="text-center">
-          <Button className="px-5" variant="danger" onClick={startPlaying}> Start </Button>
-          <Button onClick={toggleNumber}> Show/Hide Number </Button>
+      <Row className='justify-content-center '>
+        <Col md={6} className="text-center mb-3">
+          <Button className="px-5 mx-2" variant="danger" onClick={startPlaying}> Start </Button>
+          <Button className="mx-2"onClick={toggleNumber}> Show/Hide Number </Button>
         </Col>
       </Row>
     </Container>
