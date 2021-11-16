@@ -388,7 +388,7 @@ const Table1 = (props) => {
                 })}
             </table>
             <div className='mt-2 row justify-content-center'>
-                <Button id='button_AI1' className='col-2' onClick={startPlaying}>Start AI1</Button>
+                <Button id='button_AI1' className='col-2' onClick={startPlaying}>Start AI2</Button>
             </div>
         </Container>
     )
